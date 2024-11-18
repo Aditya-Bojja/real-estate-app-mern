@@ -36,10 +36,8 @@ function Header() {
           {currentUser ? (
             <Link to="/profile">
               <img
-                src={
-                  "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
-                }
-                alt="Profile"
+                src={currentUser.avatar}
+                alt="profile"
                 className="object-cover rounded-full h-7 w-7"
               />
             </Link>
@@ -52,10 +50,8 @@ function Header() {
           {/* <Link to="/profile">
             {currentUser ? (
               <img
-                src={
-                  "https://www.freeiconspng.com/thumbs/profile-icon-png/profile-icon-9.png"
-                }
-                alt="Profile"
+                src={currentUser.avatar}
+                alt="profile"
                 className="object-cover rounded-full h-7 w-7"
               />
             ) : (
