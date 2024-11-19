@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaEdit } from "react-icons/fa";
 import {
@@ -130,6 +131,12 @@ function Profile() {
           {loading ? "Updating..." : "Update"}
         </button>
       </form>
+      <Link
+        to="/create-listing"
+        className="block p-3 mt-3 text-center text-white uppercase bg-green-700 rounded-lg hover:opacity-90"
+      >
+        Create Listing
+      </Link>
       <div className="flex justify-between mt-5">
         <span
           className="text-red-700 cursor-pointer"
