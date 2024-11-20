@@ -1,6 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 
 function CreateListing() {
+  const [files, setFiles] = useState([]);
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [imageUploadError, setImageUploadError] = useState(null);
+  const [uploadingImages, setUploadingImages] = useState(false);
+
+  const handleFileChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    if (selectedFiles.length + formData.imageUrls.length > 6) {
+      setImageUploadError("You can only upload up to 6 images");
+      return;
+    }
+    setImageUploadError(null);
+    setFiles(selectedFiles);
+  };
+
+  const handleUpload = async () => {
+    setUploadingImages(true);
+    setImageUploadError(null);
+
+    if (files.length === 0) {
+      setImageUploadError("No files selected");
+      setUploadingImages(false);
+      return;
+    }
+
+    const formData = new FormData();
+    files.forEach((file) => formData.append("images", file));
+
+    try {
+      const res = await fetch("/api/listing/upload-images", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        setImageUploadError("Error uploading images");
+        setUploadingImages(false);
+        return;
+      }
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        imageUrls: prevFormData.imageUrls.concat(data.urls),
+      }));
+      setFiles([]);
+      setUploadingImages(false);
+    } catch (error) {
+      setImageUploadError("Error uploading images");
+      setUploadingImages(false);
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    setFormData((currentData) => {
+      return {
+        ...currentData,
+        imageUrls: currentData.imageUrls.filter((_, i) => i !== index),
+      };
+    });
+  };
+
   return (
     <main className="max-w-4xl p-3 mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
@@ -120,11 +184,40 @@ function CreateListing() {
               accept="image/*"
               multiple
               className="w-full p-3 border border-gray-300 rounded"
+              onChange={handleFileChange}
             />
-            <button className="p-3 text-green-700 uppercase border border-green-700 rounded hover:shadow-lg disabled:opacity-80">
-              Upload
+            <button
+              type="button"
+              disabled={uploadingImages}
+              onClick={handleUpload}
+              className="p-3 text-green-700 uppercase border border-green-700 rounded hover:shadow-lg disabled:cursor-progress"
+            >
+              {uploadingImages ? "Uploading..." : "Upload"}
             </button>
           </div>
+          <p className="text-sm text-red-600">
+            {imageUploadError && imageUploadError}
+          </p>
+          {formData.imageUrls.length > 0 &&
+            formData.imageUrls.map((url, index) => (
+              <div
+                key={url}
+                className="flex items-center justify-between p-3 border"
+              >
+                <img
+                  src={url}
+                  alt={`listing-image-${index}`}
+                  className="object-contain w-20 h-20 rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="p-3 text-red-700 uppercase rounded-lg hover:opcacity-80"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           <button className="p-3 text-white uppercase rounded-lg bg-slate-700 hover:opacity-90 disabled:opacity-80">
             Create Listing
           </button>

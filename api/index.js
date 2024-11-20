@@ -1,12 +1,12 @@
+import "dotenv/config";
+
 import express from "express";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+
 import cookieParser from "cookie-parser";
 import userRouter from "./routers/user.router.js";
 import authRouter from "./routers/auth.router.js";
 import listingRouter from "./routers/listing.router.js";
-
-dotenv.config();
 
 mongoose
   .connect(process.env.MONGO_CONNECTION_STRING)
