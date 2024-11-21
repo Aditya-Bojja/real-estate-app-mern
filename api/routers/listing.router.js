@@ -3,6 +3,7 @@ import { verifyToken } from "../utils/helper.js";
 import {
   createListing,
   deleteListing,
+  updateListing,
   uploadImages,
 } from "../controllers/listing.controller.js";
 import upload from "../utils/multerConfig.js";
@@ -17,5 +18,6 @@ listingRouter.post(
   uploadImages
 );
 listingRouter.delete("/delete/:id", verifyToken, deleteListing);
+listingRouter.put("/update/:id", verifyToken, updateListing);
 
 export default listingRouter;
