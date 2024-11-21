@@ -3,6 +3,7 @@ import { verifyToken } from "../utils/helper.js";
 import {
   createListing,
   deleteListing,
+  getListing,
   updateListing,
   uploadImages,
 } from "../controllers/listing.controller.js";
@@ -19,5 +20,6 @@ listingRouter.post(
 );
 listingRouter.delete("/delete/:id", verifyToken, deleteListing);
 listingRouter.put("/update/:id", verifyToken, updateListing);
+listingRouter.get("/:id", getListing);
 
 export default listingRouter;
