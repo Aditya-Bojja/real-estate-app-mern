@@ -2,6 +2,7 @@ import express from "express";
 import { verifyToken } from "../utils/helper.js";
 import {
   createListing,
+  deleteListing,
   uploadImages,
 } from "../controllers/listing.controller.js";
 import upload from "../utils/multerConfig.js";
@@ -15,5 +16,6 @@ listingRouter.post(
   upload.array("images", 6),
   uploadImages
 );
+listingRouter.delete("/delete/:id", verifyToken, deleteListing);
 
 export default listingRouter;
