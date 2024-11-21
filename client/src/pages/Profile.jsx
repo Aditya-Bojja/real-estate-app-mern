@@ -19,6 +19,8 @@ function Profile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
   const [profileData, setProfileData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   const handleProfileChange = (e) => {
     setProfileData({ ...profileData, [e.target.id]: e.target.value });
@@ -77,6 +79,21 @@ function Profile() {
       dispatch(signOutSuccess());
     } catch (error) {
       dispatch(signOutFailure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingsError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingsError(true);
     }
   };
 
@@ -152,6 +169,45 @@ function Profile() {
       <div className="mt-3 text-green-600">
         {updateSuccess ? "Profile updated successfully" : ""}
       </div>
+      <button onClick={handleShowListings} className="w-full text-green-700">
+        Show my listings
+      </button>
+      <p className="mt-4 text-sm text-red-700">
+        {showListingsError ? "Error fetching listings" : ""}
+      </p>
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-2xl font-semibold text-center my-7">
+            Your listings
+          </h1>
+          {userListings.map((listing) => {
+            return (
+              <div
+                key={listing._id}
+                className="flex items-center justify-between gap-4 p-3 border rounded-lg"
+              >
+                <Link to={`/listing/${listing._id}`}>
+                  <img
+                    src={listing.imageUrls[0]}
+                    alt="listing-cover"
+                    className="object-contain w-16 h-16"
+                  />
+                </Link>
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="flex-1 font-semibold truncate text-slate-700 hover:underline"
+                >
+                  <p>{listing.name}</p>
+                </Link>
+                <div className="flex flex-col items-center">
+                  <button className="text-red-700 uppercase">Delete</button>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
