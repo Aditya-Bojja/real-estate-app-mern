@@ -9,6 +9,11 @@ import upload from "../utils/multerConfig.js";
 const listingRouter = express.Router();
 
 listingRouter.post("/create", verifyToken, createListing);
-listingRouter.post("/upload-images", upload.array("images", 6), uploadImages);
+listingRouter.post(
+  "/upload-images",
+  verifyToken,
+  upload.array("images", 6),
+  uploadImages
+);
 
 export default listingRouter;
