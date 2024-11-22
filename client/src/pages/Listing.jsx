@@ -31,7 +31,7 @@ function Listing() {
         setError(false);
         setLoading(true);
         const listingId = params.listingId;
-        const res = await fetch(`/api/listing/${listingId}`);
+        const res = await fetch(`/api/listing/get/${listingId}`);
         const data = await res.json();
         if (data.success === false) {
           setError(true);
