@@ -13,12 +13,13 @@ function Header() {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set("searchTerm", searchTerm);
     const searchQuery = urlParams.toString();
-    navigate(`/search/${searchQuery}`);
+    navigate(`/search?${searchQuery}`);
   };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
+    //when the searchTerm is cleared in the filters panel and you want that to clear/sync with the main search bar value, then remove the if condition and directly setSearchTerm here without any checking
     if (searchTermFromUrl) setSearchTerm(searchTermFromUrl);
   }, [location.search]);
 
