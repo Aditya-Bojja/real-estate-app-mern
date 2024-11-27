@@ -24,35 +24,37 @@ function Header() {
   }, [location.search]);
 
   return (
-    <header className="shadow-md bg-slate-200">
-      <div className="flex items-center justify-between max-w-6xl p-3 mx-auto">
+    <header className="fixed top-0 z-50 w-full h-16 shadow-md shadow-custom-bg bg-white/80 backdrop-blur-md">
+      <div className="flex items-center justify-between max-w-6xl p-2 mx-auto">
         <Link to="/">
-          <h1 className="flex flex-wrap text-sm font-bold sm:text-xl">
-            <span className="text-slate-500">Real</span>
-            <span className="text-slate-700">Estate</span>
+          <h1 className="text-lg font-bold text-transparent md:text-2xl lg:text-3xl bg-gradient-to-r from-custom-secondary to-custom-primary bg-clip-text">
+            EstateEase
           </h1>
         </Link>
         <form
           onSubmit={handleSearchSubmit}
-          className="flex items-center p-3 rounded-lg bg-slate-100"
+          className="flex items-center p-3 rounded-lg bg-custom-bg"
         >
           <input
             type="text"
             placeholder="Search..."
-            className="w-24 bg-transparent focus:outline-none sm:w-64"
+            className="w-24 bg-transparent focus:outline-none md:w-48 lg:w-64"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <FaSearch className="text-slate-600" />
+          <FaSearch
+            className="cursor-pointer text-slate-700"
+            onClick={handleSearchSubmit}
+          />
         </form>
-        <ul className="flex gap-4">
+        <ul className="flex items-center gap-4 text-base lg:text-lg">
           <Link to="/">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden transition-all duration-300 text-slate-700 sm:inline hover:text-slate-500">
               Home
             </li>
           </Link>
           <Link to="/about">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
+            <li className="hidden transition-all duration-300 text-slate-700 sm:inline hover:text-slate-500">
               About
             </li>
           </Link>
@@ -66,7 +68,9 @@ function Header() {
             </Link>
           ) : (
             <Link to="/sign-in">
-              <li className="text-slate-700 hover:underline">SignIn</li>
+              <li className="px-5 py-1 text-white transition-all duration-300 rounded-lg hover:opacity-90 bg-custom-primary">
+                SignIn
+              </li>
             </Link>
           )}
           {/* Alternative approach */}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ListingItem from "../components/ListingItem";
 
 function Search() {
@@ -17,8 +18,15 @@ function Search() {
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
   const [showMore, setShowMore] = useState(false);
+  const [isTypeOpen, setIsTypeOpen] = useState(true);
+  const [isAmenitiesOpen, setIsAmenitiesOpen] = useState(false);
+  const [isOffersOpen, setIsOffersOpen] = useState(false);
 
   console.log(listings);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
@@ -133,23 +141,136 @@ function Search() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="border-b-2 p-7 md:border-r-2 md:min-h-screen">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-          <div className="flex items-center gap-2">
-            <label className="font-semibold whitespace-nowrap">
+    <div className="flex flex-col mx-auto mt-16 md:flex-row bg-custom-bg max-w-screen-2xl">
+      <div className="p-2 md:min-h-screen md:w-2/6 lg:w-1/4 ">
+        <form onSubmit={handleSubmit} className="flex flex-col bg-white">
+          <div className="flex items-center gap-2 px-7 pt-7">
+            {/* <label className="font-semibold whitespace-nowrap">
               Search term:{" "}
-            </label>
+            </label> */}
             <input
               type="text"
               id="searchTerm"
-              placeholder="Search..."
+              placeholder="Search term"
               className="w-full p-3 border rounded-lg"
               value={filters.searchTerm}
               onChange={handleChange}
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 py-5 px-7">
+            {/* <label className="font-semibold">Sort: </label> */}
+            <select
+              id="sort_order"
+              className="w-full p-3 border rounded-lg cursor-pointer"
+              onChange={handleChange}
+              value={`${filters.sort}_${filters.order}`}
+            >
+              <option value="regularPrice_desc">Price high to low</option>
+              <option value="regularPrice_asc">Price low to high</option>
+              <option value="createdAt_desc">Latest</option>
+              <option value="createdAt_asc">Oldest</option>
+            </select>
+          </div>
+          <div className="px-7 border-y">
+            <div
+              className="flex items-center justify-between py-3 cursor-pointer"
+              onClick={() => setIsTypeOpen((prev) => !prev)}
+            >
+              <span>Type</span>
+              {isTypeOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
+            {isTypeOpen && (
+              <div className="flex flex-col gap-4 pt-2 pb-8">
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="all"
+                    className="w-5"
+                    checked={filters.type === "all"}
+                    onChange={handleChange}
+                  />
+                  <span>Rent & Sale</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="rent"
+                    className="w-5"
+                    checked={filters.type === "rent"}
+                    onChange={handleChange}
+                  />
+                  <span>Rent</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="sale"
+                    className="w-5"
+                    checked={filters.type === "sale"}
+                    onChange={handleChange}
+                  />
+                  <span>Sale</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="border-b px-7">
+            <div
+              className="flex items-center justify-between py-3 cursor-pointer"
+              onClick={() => setIsAmenitiesOpen((prev) => !prev)}
+            >
+              <span>Amenities</span>
+              {isAmenitiesOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
+            {isAmenitiesOpen && (
+              <div className="flex flex-col gap-4 pt-2 pb-8">
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="parking"
+                    className="w-5"
+                    checked={filters.parking}
+                    onChange={handleChange}
+                  />
+                  <span>Parking</span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="furnished"
+                    className="w-5"
+                    checked={filters.furnished}
+                    onChange={handleChange}
+                  />
+                  <span>Furnished</span>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="border-b px-7">
+            <div
+              className="flex items-center justify-between py-3 cursor-pointer"
+              onClick={() => setIsOffersOpen((prev) => !prev)}
+            >
+              <span>Offers</span>
+              {isOffersOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+            </div>
+            {isOffersOpen && (
+              <div className="flex flex-col gap-4 pt-2 pb-8">
+                <div className="flex gap-2">
+                  <input
+                    type="checkbox"
+                    id="offer"
+                    className="w-5 cursor-pointer"
+                    checked={filters.offer}
+                    onChange={handleChange}
+                  />
+                  <span>Offer</span>
+                </div>
+              </div>
+            )}
+          </div>
+          {/* <div className="flex flex-wrap items-center gap-2">
             <label className="font-semibold">Type:</label>
             <div className="flex gap-2">
               <input
@@ -191,8 +312,8 @@ function Search() {
               />
               <span>Offer</span>
             </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+          </div> */}
+          {/* <div className="flex flex-wrap items-center gap-2">
             <label className="font-semibold">Amenities:</label>
             <div className="flex gap-2">
               <input
@@ -214,8 +335,8 @@ function Search() {
               />
               <span>Furnished</span>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
+          </div> */}
+          {/* <div className="flex items-center gap-2">
             <label className="font-semibold">Sort: </label>
             <select
               id="sort_order"
@@ -228,17 +349,17 @@ function Search() {
               <option value="createdAt_desc">Latest</option>
               <option value="createdAt_asc">Oldest</option>
             </select>
-          </div>
-          <button className="p-3 text-white uppercase rounded-lg bg-slate-700 hover:opacity-90">
+          </div> */}
+          <button className="p-3 text-white uppercase rounded-lg mx-7 my-7 bg-custom-primary hover:opacity-90">
             Search
           </button>
         </form>
       </div>
-      <div className="flex-1">
-        <h1 className="p-3 mt-5 text-3xl font-semibold border-b text-slate-700">
-          Listing results:
+      <div className="flex-1 p-2">
+        <h1 className="text-3xl font-semibold text-blue-600 bg-white pt-7 px-7">
+          Property results
         </h1>
-        <div className="flex flex-wrap gap-4 p-7">
+        <div className="bg-white p-7">
           {loading && (
             <p className="w-full text-xl text-center text-slate-700">
               Loading...
@@ -247,15 +368,17 @@ function Search() {
           {!loading && listings.length === 0 && (
             <p className="text-xl text-slate-700">No listings found!</p>
           )}
-          {!loading &&
-            listings &&
-            listings.map((listing) => (
-              <ListingItem key={listing._id} listing={listing} />
-            ))}
+          <div className="flex flex-wrap gap-4 md:justify-center lg:justify-normal">
+            {!loading &&
+              listings &&
+              listings.map((listing) => (
+                <ListingItem key={listing._id} listing={listing} />
+              ))}
+          </div>
           {showMore && (
             <button
               onClick={handleShowMore}
-              className="p-2 my-4 text-center text-green-700 hover:underline"
+              className="p-2 my-4 text-center text-blue-600 hover:underline"
             >
               Show more
             </button>
